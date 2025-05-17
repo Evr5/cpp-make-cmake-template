@@ -1,54 +1,37 @@
+# Directories
+BUILD_DIR := ./build
+OUTPUT_DIR := .
+
+# Detect OS
 ifeq ($(OS),Windows_NT)
-    IS_WINDOWS := 1
-    SHELL := cmd
-    MKDIR := mkdir
-    RM_DIR := rmdir /S /Q
-	RM_FILE := del /Q
-	GENERATOR := "MinGW Makefiles"
-	CLEAN_DIR := build
-	CLEAN_FILE := NAME_OF_EXECUTABLE.exe
+$(info Windows detected)
+	CORES := $(NUMBER_OF_PROCESSORS)
+	CLEAN_CMD := powershell -Command "if (Test-Path '$(BUILD_DIR)') { Remove-Item '$(BUILD_DIR)' -Recurse -Force }"
+	GENERATOR := "Ninja"
 else
-    IS_WINDOWS := 0
-    SHELL := /bin/bash
-    MKDIR := mkdir -p
-    RM_DIR := rm -rf
-	RM_FILE := rm -f
+$(info Linux/macOS detected)
+	UNAME_S := $(shell uname -s)
+	CORES := $(shell nproc)
+	CLEAN_CMD := rm -rf $(BUILD_DIR)
 	GENERATOR := "Unix Makefiles"
-	CLEAN_DIR := build
-	CLEAN_FILE := NAME_OF_EXECUTABLE
-    CORES := $(shell nproc 2>/dev/null || echo 1)
 endif
 
-BUILD_DIR = build
-OUTPUT_DIR = $(abspath .)
+# Targets
+all: release
 
-all: setup
-ifeq ($(IS_WINDOWS), 1)
-	@cmake -S . -B $(BUILD_DIR) -G $(GENERATOR) -DCMAKE_BUILD_TYPE=Release -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=$(OUTPUT_DIR)
-	@cmake --build $(BUILD_DIR)
-else
-	@cmake -S . -B $(BUILD_DIR) -G $(GENERATOR) -DCMAKE_BUILD_TYPE=Release -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=$(OUTPUT_DIR)
+debug:
+	@cmake -S . -B $(BUILD_DIR) -DCMAKE_BUILD_TYPE=Debug -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=$(abspath $(OUTPUT_DIR))
 	@cmake --build $(BUILD_DIR) -- -j$(CORES)
-endif
 
-debug: setup
-ifeq ($(IS_WINDOWS), 1)
-	@cmake -S . -B $(BUILD_DIR) -G $(GENERATOR) -DCMAKE_BUILD_TYPE=Debug -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=$(OUTPUT_DIR)
-	@cmake --build $(BUILD_DIR)
-else
-	@cmake -S . -B $(BUILD_DIR) -G $(GENERATOR) -DCMAKE_BUILD_TYPE=Debug -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=$(OUTPUT_DIR)
+release:
+	@cmake -S . -B $(BUILD_DIR) -DCMAKE_BUILD_TYPE=Release -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=$(abspath $(OUTPUT_DIR))
 	@cmake --build $(BUILD_DIR) -- -j$(CORES)
-endif
-
-setup:
-	$(MKDIR) $(BUILD_DIR)
 
 clean:
-	$(RM_DIR) $(CLEAN_DIR)
-	$(RM_FILE) $(CLEAN_FILE)
-
-re: clean all
+	@$(CLEAN_CMD)
 
 re_debug: clean debug
 
-.PHONY: all debug clean re re_debug
+re_release: clean release
+
+.PHONY: all debug release clean re_debug re_release
