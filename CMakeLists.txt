@@ -29,3 +29,6 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     # add_subdirectory(test)
 endif()
 
+file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.cpp)
+
+add_executable(${PROJECT_NAME} ${SOURCES})
