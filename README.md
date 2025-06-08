@@ -48,6 +48,20 @@ make debug
 make static
 ```
 
+#### Install binaries
+
+```sh
+sudo make install
+```
+
+It will install the binaries in `/usr/local/bin/`
+
+#### Launch tests
+
+```sh
+make test
+```
+
 #### Clean builds
 
 ```sh
@@ -100,6 +114,36 @@ The CMake config includes a placeholder for adding tests:
 enable_testing()
 # add_subdirectory(test)
 ```
+
+---
+
+## 🧰 Requirements
+
+### 🖥️ Linux/macOS
+
+Make sure you have the following installed:
+
+```sh
+sudo apt install build-essential cmake
+```
+
+Or on macOS (with Homebrew):
+
+```sh
+brew install cmake
+```
+
+### 🪟 Windows (with MinGW or VS)
+
+Install:
+
+- `CMake`
+
+- A C++ compiler like:
+  - **MinGW** (e.g. via MSYS2 or WinLibs)
+  - **Visual Studio with Desktop C++ Tools**
+
+Make sure `cmake`, `make` (or ninja) are installed and your compiler are in the PATH.
 
 ---
 

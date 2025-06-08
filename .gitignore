@@ -1,3 +1,7 @@
 .cache
 build
+build-static
+bin
+lib
 MyProject
+compile_commands.json

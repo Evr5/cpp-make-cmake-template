@@ -1,33 +1,50 @@
 # Directories
 BUILD_DIR := ./build
+STATIC_BUILD_DIR := ./build-static
 OUTPUT_DIR := . # Output directory for binaries (can be changed as needed)
+TEST_DIR := ./tests # Directory for tests (can be changed as needed)
 
 # Detect OS
 ifeq ($(OS),Windows_NT)
 	CORES := $(NUMBER_OF_PROCESSORS)
-	CLEAN_CMD := powershell -Command "if (Test-Path '$(BUILD_DIR)') { Remove-Item '$(BUILD_DIR)' -Recurse -Force }"
+	CLEAN_CMD := powershell -Command "if (Test-Path '$(BUILD_DIR)') { Remove-Item '$(BUILD_DIR)' -Recurse -Force }; if (Test-Path '$(STATIC_BUILD_DIR)') { Remove-Item '$(STATIC_BUILD_DIR)' -Recurse -Force }"
 	GENERATOR := "Ninja"
+	CMAKE := cmake.exe
+	CTEST := ctest.exe
+	SHELL := cmd
 else
 	UNAME_S := $(shell uname -s)
 	CORES := $(shell nproc)
-	CLEAN_CMD := rm -rf $(BUILD_DIR)
+	CLEAN_CMD := rm -rf $(BUILD_DIR) $(STATIC_BUILD_DIR)
 	GENERATOR := "Unix Makefiles"
+	CMAKE := cmake
+	CTEST := ctest
 endif
 
 # Targets
 all: release
 
 debug:
-	@cmake -S . -B $(BUILD_DIR) -DCMAKE_BUILD_TYPE=Debug -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=$(abspath $(OUTPUT_DIR))
-	@cmake --build $(BUILD_DIR) -- -j$(CORES)
+	@$(CMAKE) -S . -B $(BUILD_DIR) -G $(GENERATOR) -DCMAKE_BUILD_TYPE=Debug -DTEST_DIR=$(abspath $(TEST_DIR)) -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=$(abspath $(OUTPUT_DIR))
+	@$(CMAKE) --build $(BUILD_DIR) -- -j$(CORES)
 
 release:
-	@cmake -S . -B $(BUILD_DIR) -DCMAKE_BUILD_TYPE=Release -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=$(abspath $(OUTPUT_DIR))
-	@cmake --build $(BUILD_DIR) -- -j$(CORES)
+	@$(CMAKE) -S . -B $(BUILD_DIR) -G $(GENERATOR) -DCMAKE_BUILD_TYPE=Release -DTEST_DIR=$(abspath $(TEST_DIR)) -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=$(abspath $(OUTPUT_DIR))
+	@$(CMAKE) --build $(BUILD_DIR) -- -j$(CORES)
 
 static:
-	@cmake -S . -B build-static -DCMAKE_BUILD_TYPE=Release -DBUILD_STATIC=ON -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=$(abspath $(OUTPUT_DIR))
-	@cmake --build build-static -- -j$(CORES)
+	@$(CMAKE) -S . -B $(STATIC_BUILD_DIR) -G $(GENERATOR) -DCMAKE_BUILD_TYPE=Release -DTEST_DIR=$(abspath $(TEST_DIR)) -DBUILD_STATIC=ON -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=$(abspath $(OUTPUT_DIR))
+	@$(CMAKE) --build $(STATIC_BUILD_DIR) -- -j$(CORES)
+
+install:
+	@$(CMAKE) --install $(BUILD_DIR)
+
+test:
+ifeq ($(OS),Windows_NT)
+	@cd $(BUILD_DIR) && $(CTEST) --output-on-failure
+else
+	@cd $(BUILD_DIR) && $(CTEST) --output-on-failure
+endif
 
 clean:
 	@$(CLEAN_CMD)
@@ -36,4 +53,4 @@ re_debug: clean debug
 
 re_release: clean release
 
-.PHONY: all debug release clean re_debug re_release
+.PHONY: all debug release static clean re_debug re_release install test
