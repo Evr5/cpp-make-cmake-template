@@ -42,6 +42,12 @@ make
 make debug
 ```
 
+#### Static builds
+
+```sh
+make static
+```
+
 #### Clean builds
 
 ```sh
