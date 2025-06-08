@@ -1,3 +1,12 @@
+/**
+* @file main.cpp
+* @brief Entry point for the test program.
+* @author Evr5
+* @date 2025
+*
+* This file contains the main function of the C++ Test Template project.
+*/
+
 #include <iostream>
 #include <cassert>
 

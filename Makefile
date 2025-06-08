@@ -53,4 +53,16 @@ re_debug: clean debug
 
 re_release: clean release
 
-.PHONY: all debug release static clean re_debug re_release install test
+help:
+	@echo "Available targets:"
+	@echo "  make [release|debug|static]   # Build the project"
+	@echo "  make install                  # Installation"
+	@echo "  make test                     # Launch the tests"
+	@echo "  make clean                    # Clean the builds"
+	@echo "  make re_debug/re_release      # Clean + build"
+	@echo ""
+	@echo "Customizable variables:"
+	@echo "  OUTPUT_DIR=chemin             # Binary output folder"
+	@echo "  PROJECT_NAME=Nom              # Binary name (default: MyProject)"
+
+.PHONY: all debug release static clean re_debug re_release install test help

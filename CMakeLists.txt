@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
 
+# === [EDIT HERE TO CHANGE PROJECT NAME] ===
 project(MyProject VERSION 0.1.0 LANGUAGES CXX)
 
 # Options
@@ -78,3 +79,7 @@ if(BUILD_TESTS)
         message(WARNING "No test files found in ${TEST_DIR}")
     endif()
 endif()
+
+# === [EXAMPLE FOR ADDING AN EXTERNAL DEPENDENCY] ===
+# find_package(fmt REQUIRED)
+# target_link_libraries(${PROJECT_NAME} PRIVATE fmt::fmt)

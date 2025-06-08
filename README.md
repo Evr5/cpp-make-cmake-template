@@ -117,6 +117,34 @@ enable_testing()
 
 ---
 
+## 🧑‍💻 Use as a template
+
+To adapt this template to your project:
+
+1. **Change the project name**  
+   Modify the following line in `CMakeLists.txt` :
+
+   ```cmake
+   project(MyProject VERSION 0.1.0 LANGUAGES CXX)
+   ```
+
+   Replace `MyProject` with your project name.
+
+2. **Add your source files**  
+   Place your `.cpp` files in `src/` and your headers in `include/`.
+   CMakeLists automatically detects new files.
+
+3. **Add dependencies**
+    Use `find_package()` or `add_subdirectory()` in `CMakeLists.txt` to integrate external libraries.
+
+4. **Disable Tests**
+    Set `-DBUILD_TESTS=OFF` to CMake or modify the option in the file.
+
+5. **Change the Output Folder**
+    Modify the `OUTPUT_DIR` variable in the `Makefile`.
+
+---
+
 ## 🧰 Requirements
 
 ### 🖥️ Linux/macOS
