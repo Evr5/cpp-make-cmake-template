@@ -74,6 +74,16 @@ make clean
 ./MyProject
 ```
 
+#### Show available Makefile targets
+
+You can run:
+
+```sh
+make help
+```
+
+to display all available build targets and customizable variables.
+
 ### 🪟 Windows (MinGW or WSL)
 
 ```sh
