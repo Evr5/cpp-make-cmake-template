@@ -14,7 +14,7 @@ ifeq ($(OS),Windows_NT)
 	SHELL := cmd
 else
 	UNAME_S := $(shell uname -s)
-	CORES := $(shell nproc)
+	CORES := $(shell sysctl -n hw.ncpu 2>/dev/null || nproc)
 	CLEAN_CMD := rm -rf $(BUILD_DIR) $(STATIC_BUILD_DIR)
 	GENERATOR := "Unix Makefiles"
 	CMAKE := cmake
