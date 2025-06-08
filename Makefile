@@ -1,6 +1,6 @@
 # Directories
 BUILD_DIR := ./build
-OUTPUT_DIR := .
+OUTPUT_DIR := . # Output directory for binaries (can be changed as needed)
 
 # Detect OS
 ifeq ($(OS),Windows_NT)

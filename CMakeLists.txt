@@ -35,7 +35,8 @@ else()
     add_compile_options(-O3 -DNDEBUG)
 endif()
 
-project(project_name)
+# Set project name
+project(MyProject)
 
 # Source files
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.cpp)
