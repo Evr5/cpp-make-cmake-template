@@ -47,6 +47,11 @@ else()
     endif()
 endif()
 
+# Define the minimum Windows version for compatibility
+if(WIN32)
+    add_compile_definitions(_WIN32_WINNT=0x0600)
+endif()
+
 # Source and include directories
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.cpp)
 
