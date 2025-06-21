@@ -125,6 +125,7 @@ enable_testing()
 # add_subdirectory(test)
 ```
 
+
 ---
 
 ## 🧑‍💻 Use as a template
@@ -152,6 +153,62 @@ To adapt this template to your project:
 
 5. **Change the Output Folder**
     Modify the `OUTPUT_DIR` variable in the `Makefile`.
+
+---
+
+## 📚 Add external libraries with FetchContent (modular method)
+
+To add an external dependency using `FetchContent`, you can:
+
+1. Create a `.cmake` file for the library inside the `cmake` folder.
+2. Use `include(...)` in your `CMakeLists.txt` to load it.
+3. Link it to your targets.
+
+### 🛠 Example: Adding `fmt`
+
+#### 1. Create a new file at `cmake/fmt.cmake`:
+
+```cmake
+include(FetchContent)
+
+FetchContent_Declare(
+  fmt
+  GIT_REPOSITORY https://github.com/fmtlib/fmt.git
+  GIT_TAG        11.2.0
+)
+
+FetchContent_MakeAvailable(fmt)
+```
+
+#### 2. Modify your `CMakeLists.txt`:
+
+At the top of your `CMakeLists.txt`, add:
+
+```cmake
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+include(fmt)
+```
+
+Then link `fmt` to your target:
+
+```cmake
+target_link_libraries(${PROJECT_NAME} PRIVATE fmt::fmt)
+```
+
+#### 3. Use the library in your code
+
+In the `main.cpp`:
+
+```cpp
+#include <fmt/core.h>
+
+int main() {
+    fmt::print("Hello, formatted world!\n");
+    return 0;
+}
+```
+
+This method keeps your project modular and clean, especially when managing multiple dependencies.
 
 ---
 

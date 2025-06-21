@@ -7,9 +7,9 @@
 * This file contains the main function of the C++ Starter Template project.
 */
 
-#include <iostream>
+#include <fmt/core.h>
 
 int main() {
-    std::cout << "Hello from C++ cross-platform template!" << std::endl;
+    fmt::print("Hello from C++ cross-platform template using fmt!\n");
     return 0;
 }

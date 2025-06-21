@@ -2,7 +2,5 @@
 build
 build-static
 bin
-lib
 MyProject
 MyProject.exe
-compile_commands.json
