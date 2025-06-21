@@ -1,5 +1,8 @@
 # C++ CMake Starter Template
 
+> 🧰 This repository is a reusable C++ + CMake starter template.  
+> Click on "**Use this template**" (top right of the page) to start your own project based on it.
+
 This repository provides a clean and cross-platform C++ project template using **CMake** and **Makefile**. It is designed for modern C++ development with easy compilation on **Linux**, **Windows**, and **macOS**, and supports both **static** and **dynamic linking**.
 
 ## ✅ Features
@@ -125,7 +128,6 @@ enable_testing()
 # add_subdirectory(test)
 ```
 
-
 ---
 
 ## 🧑‍💻 Use as a template
@@ -166,7 +168,7 @@ To add an external dependency using `FetchContent`, you can:
 
 ### 🛠 Example: Adding `fmt`
 
-#### 1. Create a new file at `cmake/fmt.cmake`:
+#### 1. Create a new file at `cmake/fmt.cmake`
 
 ```cmake
 include(FetchContent)
@@ -180,7 +182,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(fmt)
 ```
 
-#### 2. Modify your `CMakeLists.txt`:
+#### 2. Modify your `CMakeLists.txt`
 
 At the top of your `CMakeLists.txt`, add:
 
