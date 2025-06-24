@@ -5,7 +5,7 @@ project(MyProject VERSION 0.1.0 LANGUAGES CXX)
 
 # Add custom CMake modules path (optional, juust need to include the name of the module)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-include(fmt)
+include(spdlog)
 
 # Options
 option(BUILD_STATIC "Link standard libs statically" OFF)
@@ -27,14 +27,16 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
 endif()
 
-# Static linking (cross-platform)
+# Static linking (fully static - cross-platform)
 if(BUILD_STATIC)
     message(STATUS "Static linking enabled")
+
     if(MSVC)
         set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
     else()
-        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libgcc -static-libstdc++")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc")
+        # Link everything statically, including libc
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static")
+        set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
     endif()
 endif()
 
@@ -63,7 +65,7 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.cpp)
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 # External libraries target
-target_link_libraries(${PROJECT_NAME} PRIVATE fmt::fmt)
+target_link_libraries(${PROJECT_NAME} PRIVATE spdlog::spdlog_header_only)
 
 # Include directories 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/include)
@@ -79,7 +81,7 @@ if(BUILD_TESTS)
 
     if(TEST_SOURCES)
         add_executable(tests ${TEST_SOURCES})
-        target_link_libraries(tests PRIVATE fmt::fmt)
+        target_link_libraries(tests PRIVATE spdlog::spdlog_header_only)
         target_include_directories(tests PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
         # Set the binary in build/tests/

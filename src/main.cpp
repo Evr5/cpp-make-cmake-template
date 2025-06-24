@@ -7,9 +7,9 @@
 * This file contains the main function of the C++ Starter Template project.
 */
 
-#include <fmt/core.h>
+#include <spdlog/spdlog.h>
 
 int main() {
-    fmt::print("Hello from C++ cross-platform template using fmt!\n");
+    spdlog::info("Hello from spdlog!");
     return 0;
 }
