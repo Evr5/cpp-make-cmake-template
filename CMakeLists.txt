@@ -66,6 +66,9 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 
 # External libraries target
 target_link_libraries(${PROJECT_NAME} PRIVATE spdlog::spdlog_header_only)
+if (WIN32)
+    target_link_libraries(${PROJECT_NAME} PRIVATE ws2_32)
+endif()
 
 # Include directories 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/include)
